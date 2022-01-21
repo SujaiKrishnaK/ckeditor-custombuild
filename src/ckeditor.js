@@ -20,6 +20,7 @@ import ImageCaption from '@ckeditor/ckeditor5-image/src/imagecaption';
 import ImageStyle from '@ckeditor/ckeditor5-image/src/imagestyle';
 import ImageToolbar from '@ckeditor/ckeditor5-image/src/imagetoolbar';
 import ImageUpload from '@ckeditor/ckeditor5-image/src/imageupload';
+import LinkImage from '@ckeditor/ckeditor5-link/src/linkimage';
 import Indent from '@ckeditor/ckeditor5-indent/src/indent';
 import Link from '@ckeditor/ckeditor5-link/src/link';
 import List from '@ckeditor/ckeditor5-list/src/list';
@@ -37,11 +38,14 @@ import SpecialCharactersEssentials from '@ckeditor/ckeditor5-special-characters/
 import FontColor from '@ckeditor/ckeditor5-font/src/fontcolor';
 import FontBackgroundColor from '@ckeditor/ckeditor5-font/src/fontbackgroundcolor';
 import FontSize from '@ckeditor/ckeditor5-font/src/fontsize';
-
+import SimpleUploadAdapter from '@ckeditor/ckeditor5-upload/src/adapters/simpleuploadadapter';
+import Highlight from '@ckeditor/ckeditor5-highlight/src/highlight';
+import '../sample/custom.css'
 export default class ClassicEditor extends ClassicEditorBase {}
 
 function SpecialCharactersEmoji( editor ) {
-    editor.plugins.get( 'SpecialCharacters' ).addItems( 'Emoji', [
+	editor.plugins.get('SpecialCharacters').addItems('Emoji',
+		[
         { title: 'smiley face', character: '😊' },
         { title: 'rocket', character: '🚀' },
         { title: 'wind blowing face', character: '🌬️' },
@@ -68,6 +72,7 @@ ClassicEditor.builtinPlugins = [
 	ImageStyle,
 	ImageToolbar,
 	ImageUpload,
+	LinkImage,
 	Indent,
 	Link,
 	List,
@@ -84,7 +89,8 @@ ClassicEditor.builtinPlugins = [
 	SpecialCharactersEmoji,
 	FontColor,
 	FontSize,
-	FontBackgroundColor
+	FontBackgroundColor,SimpleUploadAdapter,Highlight
+	
 ];
 
 // Editor configuration.
@@ -99,7 +105,7 @@ ClassicEditor.defaultConfig = {
 			'italic',
 			'|',
 			'specialCharacters',
-			'fontColor','fontSize','fontBackgroundColor',
+			'fontColor','fontSize','fontBackgroundColor','|',
 			'link',
 			'bulletedList',
 			'numberedList',
@@ -112,8 +118,43 @@ ClassicEditor.defaultConfig = {
 			'insertTable',
 			'mediaEmbed',
 			'undo',
-			'redo'
+			'redo',
+			'highlight'
 		]
+	},
+	highlight: {
+		options: [
+			{
+				model: 'greenMarker',
+				class: 'marker-green',
+				title: 'Green marker',
+				color: 'var(--ck-highlight-marker-green)',
+				type: 'marker'
+			},
+			{
+				model: 'redPen',
+				class: 'pen-red',
+				title: 'Red pen',
+				color: 'var(--ck-highlight-pen-red)',
+				type: 'pen'
+			},
+			{
+				model: 'pinkMarker',
+				class: 'marker-pink',
+				title: 'Pink Marker',
+				color: 'var(--ck-highlight-marker-pink)',
+				type: 'marker'
+			}
+		]
+	},
+	fontFamily: {
+		options:['default',
+			'Ubuntu, Arial, sans-serif',
+			'Roboto, sans-serif',
+			'Ubuntu Mono, Courier New, Courier, monospace',
+			'Anonymous Pro ,monospace',
+			],
+			supportAllValues: true
 	},
 	fontColor: {
 		colors: [
@@ -171,8 +212,20 @@ ClassicEditor.defaultConfig = {
 			'imageStyle:side',
 			'|',
 			'toggleImageCaption',
-			'imageTextAlternative'
+			'imageTextAlternative', '|',
+			'linkImage'
 		]
+	},simpleUpload: {
+		// The URL that the images are uploaded to.
+		uploadUrl: 'http://35.154.50.216:8080/dcmlms_v1.1/api/fileUpload',
+
+		// Enable the XMLHttpRequest.withCredentials property.
+		withCredentials: true,
+
+		// Headers sent along with the XMLHttpRequest to the upload server.
+		headers: {
+			token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyVHlwZSI6MTczNDR9.Ppz7EketPSQ50ihxt9qFQ7UlP3C9sj1qOmqZ6aFeA60'
+		}
 	},
 	table: {
 		contentToolbar: [
